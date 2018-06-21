@@ -25,12 +25,15 @@ SECRET_KEY = '!an7!=6m=iom#kcb_j9%e95$$tr+74e#^l1)zw8q)eb1vj#^bb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.64',
+                 'localhost',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'teleapp.apps.TeleappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
