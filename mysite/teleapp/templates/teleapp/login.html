@@ -1,1 +1,42 @@
 {% extends "teleapp/base.html" %}
+
+{% block title %} Login {% endblock %}
+
+{%block sidebar %}
+<h2> Help </h2>
+<ul class="list-group">
+  <li class="list-group-item"> Login with account details </li>
+  <li class="list-group-item"> Make a <a href="{% url 'teleapp:request' %}">request</a> if you don't have an account</li>
+</ul>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h2>Login</h2>
+  <form action="{% url 'teleapp:login' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
+    </div>
+
+     <div class="form-group">
+       <label for="pwd">Password:</label>
+     <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
+    </div>
+    <div class="form-group form-check">
+      <label class="form-check-label">
+        <input class="form-check-input" type="checkbox" name="remember"> Remember me
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+{% if error_message %}
+  <p class="text-danger mt-3 bg-light card-body"> {{ error_message }} </p>
+{% endif %}
+
+{% endblock %}

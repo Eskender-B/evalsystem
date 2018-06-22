@@ -1,1 +1,21 @@
 {% extends "teleapp/base.html" %}
+
+{% block title %} Logout {% endblock %}
+
+{% block sidebar %}
+
+<h2> Help </h2>
+<ul class="list-group">
+  <li class="list-group-item"> <a href="{% url 'teleapp:login' %}"> Login</a></li>
+  <li class="list-group-item"> <a href="{% url 'teleapp:request' %}">Request</a></li>
+</ul>
+
+
+{% endblock %}
+
+{% block content %}
+  <div class="card bg-success text-white">
+    <div class="card-body">You have successfully loged out!</div>
+  </div>
+
+{% endblock %}

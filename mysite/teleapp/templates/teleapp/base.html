@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-sm-9">
-             <h1 class="font-weight-bold " style="font-family:serif">ETHIO TELECOM EMPLOYEE EVALUATION</h1>
+             <h1 class="font-weight-bold " style="font-family:'Times New Roman">ETHIO TELECOM EMPLOYEE EVALUATION</h1>
         </div>
 
     </div>
@@ -58,7 +58,20 @@
       </ul>
     </div> 
 
-    <p class="text-white"> <strong> Position: {%block position %} Login first {% endblock %} </strong> </p> 
+    <p class="text-white"> 
+      <strong> Position: 
+
+      {% if not request.session.user.is_anonymous %}
+         {% if request.session.user.is_superuser %}
+            Admin
+	 {% else %}
+            None
+         {% endif %}
+      {% else %}
+        Login first 
+      {% endif %}
+      </strong> 
+    </p> 
   </nav>
 </div>
 
