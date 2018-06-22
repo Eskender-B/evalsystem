@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,6 @@ STATIC_URL = '/static/'
 
 # Add URL to redirect to after login
 LOGIN_REDIRECT_URL = 'teleap:home'
+
+# EAV specific setting
+SITE_ID = 1
