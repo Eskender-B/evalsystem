@@ -4,5 +4,6 @@
  WORKDIR /code
  ADD requirements.txt /code/
  RUN pip install -r requirements.txt
+ RUN pip install git+git://github.com/mvpdev/django-eav.git#egg=django-eav
  ADD . /code/
 
