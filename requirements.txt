@@ -1,2 +1,4 @@
- Django>=2.0
+ Django==1.6
  psycopg2
+ eav-django
+ django-autoslug

@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
 # Create your views here.
 
 def my_login(request):
 
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		return HttpResponseRedirect(reverse('teleapp:home'))
 
 	if request.method == 'POST':
@@ -24,7 +24,7 @@ def my_login(request):
 
 def my_logout(request):
 
-	if not request.user.is_authenticated:
+	if not request.user.is_authenticated():
 		return HttpResponseRedirect(reverse('teleapp:login'))
 		
 	else:
@@ -38,7 +38,7 @@ def request(request):
 
 
 def home(request):
-	if not request.user.is_authenticated:
+	if not request.user.is_authenticated():
 		return HttpResponseRedirect(reverse('teleapp:login'))
 	else:
 		return render(request, 'teleapp/home.html')
@@ -50,7 +50,7 @@ def info(request):
 
 def summary(request):
 
-	if not request.user.is_authenticated:
+	if not request.user.is_authenticated():
 		return HttpResponseRedirect(reverse('teleapp:login'))
 	else:
 		return render(request, 'teleapp/summary.html')

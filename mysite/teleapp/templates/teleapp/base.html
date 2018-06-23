@@ -61,8 +61,8 @@
     <p class="text-white"> 
       <strong> Position: 
 
-      {% if not request.session.user.is_anonymous %}
-         {% if request.session.user.is_superuser %}
+      {% if not request.user.is_anonymous %}
+         {% if request.user.is_superuser %}
             Admin
 	 {% else %}
             None

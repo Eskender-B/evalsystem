@@ -1,7 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+from eav.models import BaseEntity, BaseSchema, BaseAttribute
 
-class Employee(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	
+# Create your models here.
+class Employee(BaseEntity):
+	name = models.CharField(max_length=50)	
+
+#user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+class Schema (BaseSchema):
+	pass
+
+
+class Attr(BaseAttribute):
+	schema = models.ForeignKey(Schema)

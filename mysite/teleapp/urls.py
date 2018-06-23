@@ -1,13 +1,12 @@
-from django.urls import path
-from . import views
+from django.conf.urls import patterns, url
 
-app_name= 'teleapp'
+from teleapp import views
 
-urlpatterns = [
-	path('', views.my_login, name='login'),
-	path('logout', views.my_logout, name='logout'),
-	path('request', views.request, name='request'),
-	path('home', views.home, name='home'),
-	path('info', views.info, name='info'),
-	path('summary', views.summary, name='summary'),
-]
+urlpatterns = patterns('',
+	url('^$', views.my_login, name='login'),
+	url(r'^logout', views.my_logout, name='logout'),
+	url(r'^request', views.request, name='request'),
+	url(r'^home', views.home, name='home'),
+	url(r'^info', views.info, name='info'),
+	url(r'^summary', views.summary, name='summary'),
+)
