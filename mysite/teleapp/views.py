@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .models import Employees, Questions
+
 # Create your views here.
 
 def my_login(request):
@@ -69,9 +70,41 @@ def evaluate(request):
 
 @login_required
 def edit(request):
-	question_list = Questions.objects.all()
-	return render(request, 'teleapp/edit.html',{'question_list': question_list})
+        # protect if users guess the url
+	if not request.user.is_superuser:
+		return HttpResponseRedirect(reverse('teleapp:home'))
+	
+	if request.method == 'POST':
+		if request.POST['question'] =='' or request.POST['weight']=='':
+			return render(request, 'teleapp/edit.html', 
+				{'error_message':"Missing Field!",
+				 'question_list': Questions.objects.all()})
+		else:
+			q = Questions.objects.create(question_text=request.POST['question'],
+					weight=request.POST['weight'])
+			q.save()
+	
+		return HttpResponseRedirect(reverse('teleapp:edit'))
 
+	else:
+		# FIX ME
+		# Try block for missing get param
+		try:
+			val=request.GET['pk']
+		except(KeyError):
+			val = None
+		
+
+		# Try block for missing data	
+		try:
+			question = Questions.objects.get(pk=val)
+			question.delete()
+
+		except (KeyError, Questions.DoesNotExist):
+			pass
+
+		question_list = Questions.objects.all()
+		return render(request, 'teleapp/edit.html',{'question_list': question_list})
 
 @login_required
 def accounts(request):

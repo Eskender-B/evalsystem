@@ -68,7 +68,7 @@
           <td>{{ question.pk }} </td>
           <td>{{ question.question_text }}</td>
           <td>{{ question.weight }}</td>
-          <td><a class="btn btn-primary" href="{% url 'teleapp:edit' %}">delete</a></td>
+          <td><a class="btn btn-primary" href="{% url 'teleapp:edit'%}?pk={{question.pk}}">delete</a></td>
        </tr>
     {% endfor %}
     </tbody>
@@ -77,12 +77,10 @@
   
 
 
-
-
 <div class="mt-5 mb-5">  
 <p><strong> Add criteria: </strong></p>
-<form class="form-inline form-control" action="{% url 'teleapp:edit' %}">
-    
+<form class="form-inline form-control" method='post' action="{% url 'teleapp:edit' %}">
+   {% csrf_token %} 
     <label class="mr-sm-2" for="comment"> Criteria: </label>
     <textarea cols="70" class="form-control align-items-stretch mr-sm-2" rows="1" id="comment" name="question" placeholder="Type in criteria question"></textarea>
     
@@ -91,6 +89,10 @@
 
     <button type="submit" class="btn btn-primary mr-sm-2">Submit</button>
 </form>
+{% if error_message %}
+  <p class="text-danger mt-3 bg-light card-body"> {{ error_message }} </p>
+{% endif %}
+
 </div>
 
 {% endblock %}
