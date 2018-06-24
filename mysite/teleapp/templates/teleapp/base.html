@@ -61,12 +61,8 @@
     <p class="text-white"> 
       <strong> Position: 
 
-      {% if not request.session.user.is_anonymous %}
-         {% if request.session.user.is_superuser %}
-            Admin
-	 {% else %}
-            None
-         {% endif %}
+      {% if not request.user.is_anonymous %}
+        {{ request.user.employees.get_status_display }}
       {% else %}
         Login first 
       {% endif %}
