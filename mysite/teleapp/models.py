@@ -29,4 +29,4 @@ class Questions(models.Model):
 	weight = models.IntegerField()
 
 	def __str__(self):
-		return question_text
+		return self.question_text

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-
+from .models import Employees, Questions
 # Create your views here.
 
 def my_login(request):
@@ -69,5 +69,6 @@ def evaluate(request):
 
 @login_required
 def edit(request):
-	return render(request, 'teleapp/edit.html')
+	question_list = Questions.objects.all()
+	return render(request, 'teleapp/edit.html',{'question_list': question_list})
 
