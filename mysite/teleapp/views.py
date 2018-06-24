@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -54,3 +55,28 @@ def summary(request):
 		return HttpResponseRedirect(reverse('teleapp:login'))
 	else:
 		return render(request, 'teleapp/summary.html')
+
+@login_required
+def template(request):
+	return render(request, 'teleapp/template.html')
+
+
+@login_required
+def result(request):
+	return render(request, 'teleapp/result.html')
+
+
+@login_required
+def evaluatees(request):
+	return render(request, 'teleapp/evaluatees.html')
+
+
+@login_required
+def evaluate(request):
+	return render(request, 'teleapp/evaluate.html')
+
+
+@login_required
+def edit(request):
+	return render(request, 'teleapp/edit.html')
+

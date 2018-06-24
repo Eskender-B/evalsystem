@@ -133,6 +133,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Login URL
+LOGIN_URL = '/teleapp/login'
 
-# Add URL to redirect to after login
-LOGIN_REDIRECT_URL = 'teleap:home'
+# Add URL to redirect to after logiin
+LOGIN_REDIRECT_URL = '/teleapp/home'

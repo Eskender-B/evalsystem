@@ -1,1 +1,35 @@
 {% extends "teleapp/base.html" %}
+
+{% block sidebar %}
+
+<h3 class="text-center" >Evaluation</h3>
+<div class="d-flex flex-column">
+
+  <div class="p-2 bg-light mt-2">
+    <a class="btn bg-light text-center"href="{% url 'teleapp:template' %} "> Evaluation Template </a>
+  </div>
+
+
+  <div class="p-2 bg-light mt-2">
+    <a class="btn bg-light" href="{% url 'teleapp:result' %} "> Evaluation Result </a>
+  </div>
+  
+  <div class="p-2 bg-light mt-2">
+    <a class="btn bg-light" href="{% url 'teleapp:evaluatees' %} "> Evaluatees </a>
+  </div>
+
+  <div class="p-2 bg-light mt-2">
+    <a href="{% url 'teleapp:edit' %}"
+    {% if user.is_anonymous or not user.is_superuser %}
+	class="btn bg-light disabled"
+    {% else %}
+        class="btn bg-light"
+    {% endif %}
+    >
+    Edit Template 
+    </a>
+  </div>
+
+</div>
+ 
+{% endblock %}
