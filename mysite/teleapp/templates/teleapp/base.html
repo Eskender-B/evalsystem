@@ -86,9 +86,21 @@
   </div>
 </div>
 
-<div class="jumbotron-fluid bg-success text-center">
+<div class="mt-5 jumbotron-fluid bg-success text-center">
   <p style="font-size:10px"> &copy ethio telecom all rights reserved</p>
 </div>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
 
 </body>
 </html>

@@ -72,3 +72,7 @@ def edit(request):
 	question_list = Questions.objects.all()
 	return render(request, 'teleapp/edit.html',{'question_list': question_list})
 
+
+@login_required
+def accounts(request):
+	return render(request, 'teleapp/accounts.html')

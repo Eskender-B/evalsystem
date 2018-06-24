@@ -29,6 +29,18 @@
     Edit Template 
     </a>
   </div>
+<div class="p-2 bg-light mt-2">
+    <a href="{% url 'teleapp:accounts' %}"
+    {% if user.is_anonymous or not user.is_superuser %}
+	class="btn bg-light disabled"
+    {% else %}
+        class="btn bg-light"
+    {% endif %}
+    >
+    Manage accounts
+    </a>
+  </div>
+
 
 </div>
  
@@ -80,17 +92,6 @@
     <button type="submit" class="btn btn-primary mr-sm-2">Submit</button>
 </form>
 </div>
-
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
 
 {% endblock %}
 

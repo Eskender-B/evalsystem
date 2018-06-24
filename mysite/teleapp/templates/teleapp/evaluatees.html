@@ -29,6 +29,19 @@
     Edit Template 
     </a>
   </div>
+  
+  <div class="p-2 bg-light mt-2">
+    <a href="{% url 'teleapp:accounts' %}"
+    {% if user.is_anonymous or not user.is_superuser %}
+	class="btn bg-light disabled"
+    {% else %}
+        class="btn bg-light"
+    {% endif %}
+    >
+    Manage accounts
+    </a>
+  </div>
+
 
 </div>
  
