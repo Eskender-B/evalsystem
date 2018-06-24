@@ -22,39 +22,30 @@ def my_login(request):
 	else:
 		return render(request, 'teleapp/login.html')
 
-
+@login_required
 def my_logout(request):
 
-	if not request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('teleapp:login'))
-		
-	else:
-		logout(request)
-		return render(request, 'teleapp/logout.html')
-		
+	logout(request)
+	return render(request, 'teleapp/logout.html')
 
 
 def request(request):
 	return render(request, 'teleapp/request.html')
 
 
+@login_required
 def home(request):
-	if not request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('teleapp:login'))
-	else:
-		return render(request, 'teleapp/home.html')
+	return render(request, 'teleapp/home.html')
 
 
 def info(request):
 	return render(request, 'teleapp/info.html')
 
 
+@login_required
 def summary(request):
+	return render(request, 'teleapp/summary.html')
 
-	if not request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('teleapp:login'))
-	else:
-		return render(request, 'teleapp/summary.html')
 
 @login_required
 def template(request):
