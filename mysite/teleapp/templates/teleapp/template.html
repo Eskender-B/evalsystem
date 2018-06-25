@@ -1,5 +1,5 @@
 {% extends "teleapp/base.html" %}
-
+{% block title %} Edit {% endblock %}
 {% block sidebar %}
 
 <h3 class="text-center" >Evaluation</h3>
@@ -21,7 +21,7 @@
   <div class="p-2 bg-light mt-2">
     <a href="{% url 'teleapp:edit' %}"
     {% if user.is_anonymous or not user.is_superuser %}
-	class="btn bg-light disabled"
+  class="btn bg-light disabled"
     {% else %}
         class="btn bg-light"
     {% endif %}
@@ -32,7 +32,7 @@
 <div class="p-2 bg-light mt-2">
     <a href="{% url 'teleapp:accounts' %}"
     {% if user.is_anonymous or not user.is_superuser %}
-	class="btn bg-light disabled"
+  class="btn bg-light disabled"
     {% else %}
         class="btn bg-light"
     {% endif %}
@@ -42,7 +42,39 @@
   </div>
 
 
-
 </div>
  
 {% endblock %}
+
+{% block content %}
+
+<div class="container mt-3">
+  <h2>Evaluation Criteria List</h2>
+  <p>Search for criteria questions:</p>  
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>ID.</th>
+        <th>Evaluation Criteria</th>
+        <th>Weight</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+    {% for question in question_list %}
+       <tr>
+          <td>{{ question.pk }} </td>
+          <td>{{ question.question_text }}</td>
+          <td>{{ question.weight }}
+       </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+  
+</div>
+
+{% endblock %}
+
+

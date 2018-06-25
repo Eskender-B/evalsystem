@@ -52,7 +52,7 @@ def summary(request):
 
 @login_required
 def template(request):
-	return render(request, 'teleapp/template.html')
+	return render(request, 'teleapp/template.html',{'question_list': Question.objects.all()})
 
 
 @login_required
