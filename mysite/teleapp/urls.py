@@ -17,6 +17,7 @@ urlpatterns = [
 	path('edit', views.edit, name='edit'),
 	path('edit_question', views.edit_question, name='edit_question'),
 	path('accounts', views.accounts, name='accounts'),
+	path('edit_accounts', views.edit_accounts, name='edit_accounts'),
 
 
 

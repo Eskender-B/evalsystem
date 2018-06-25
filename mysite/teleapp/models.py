@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import HStoreField
 
 # Create your models here.
 
-class Employees(models.Model):
+class Employee(models.Model):
 
 	STATUS = (
 	('A', 'Admin'),
@@ -14,16 +14,21 @@ class Employees(models.Model):
 	('J', 'Junior Staff'),
 	)
 
+	# For programming convinience
+	STATUS_PR = {'A': 'Admin', 'M': 'Manager', 'S':'Supervisor', 'C':'Coach', 'J':'Junior Staff'}
+
+	DATA_DEFAULT = {'score':'0'}
+
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	status = models.CharField(max_length=1, choices=STATUS, default='N')
-	evaluator = models.ForeignKey('Employees', on_delete=models.CASCADE, default=1)
+	evaluator = models.ForeignKey('Employee', on_delete=models.CASCADE, default=1)
 	data = HStoreField()
 
 	def __str__(self):
 		return self.user.username
 
 
-class Questions(models.Model):
+class Question(models.Model):
 	
 	question_text = models.CharField(max_length=200)
 	weight = models.IntegerField()
