@@ -112,7 +112,7 @@ def edit(request):
 
 			# Add Result field for each employee
 			for emp in Employee.objects.all():
-				emp.data[q.pk]='0'
+				emp.data[str(q.pk)]='0'
 				emp.save()
 			
 	
@@ -133,12 +133,12 @@ def edit(request):
 			try:
 				question = Question.objects.get(pk=val)
 				if request.GET['action']=='delete':
-					question.delete()
-
 					# Remove corresponding key from all employees 
 					for emp in Employee.objects.all():
-						del emp.data[question.pk]
+						del emp.data[str(question.pk)]
 						emp.save()
+
+					question.delete()
 
 				elif request.GET['action']=='edit':
 					return render(request, 'teleapp/edit_question.html',
@@ -165,7 +165,7 @@ def edit_question(request):
 
 			# Reset all corresponding key from all employees to zero 
 			for emp in Employee.objects.all():
-				emp.data[q.pk] = '0'
+				emp.data[str(q.pk)] = '0'
 				emp.save()
 
 		except (KeyError, Question.DoesNotExist):
@@ -215,6 +215,11 @@ def accounts(request):
 				e = Employee.objects.create(user=u, status=stat,
 						evaluator=Employee.objects.get(pk=evltr.pk),
 						data=Employee.DATA_DEFAULT)
+
+				# Attach the created employee to the questions
+				for q in Question.objects.all():
+					e.data[str(q.pk)] = '0'
+
 				e.save()
 
 			# Fix me: Insert proper Exception type
@@ -242,6 +247,13 @@ def accounts(request):
 			try:
 				employee = Employee.objects.get(pk=val)
 				if request.GET['action']=='delete':
+					
+					# Get all evaluatees and reset their score first
+					for evaluatee in employee.employee_set.filter():
+						for q in Question.objects.all():
+							evaluatee.data[str(q.pk)] = '0'
+						evaluatee.save()
+
 					employee.user.delete()
 					employee.delete()
 			
