@@ -165,7 +165,7 @@ def edit_question(request):
 
 			# Reset all corresponding key from all employees to zero 
 			for emp in Employee.objects.all():
-				emp.data[question.pk] = '0'
+				emp.data[q.pk] = '0'
 				emp.save()
 
 		except (KeyError, Question.DoesNotExist):

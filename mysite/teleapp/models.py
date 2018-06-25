@@ -21,7 +21,7 @@ class Employee(models.Model):
 
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	status = models.CharField(max_length=1, choices=STATUS, default='N')
-	evaluator = models.ForeignKey('Employee', on_delete=models.CASCADE, default=1)
+	evaluator = models.ForeignKey('Employee', on_delete=models.SET_DEFAULT, default=1)
 	data = HStoreField()
 
 	def __str__(self):
