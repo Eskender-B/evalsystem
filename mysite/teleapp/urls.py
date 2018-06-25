@@ -14,6 +14,7 @@ urlpatterns = [
 	path('template', views.template, name='template'),
 	path('result', views.result, name='result'),
 	path('evaluatees', views.evaluatees, name='evaluatees'),
+	path('evaluate', views.evaluate, name='evaluate'),
 	path('edit', views.edit, name='edit'),
 	path('edit_question', views.edit_question, name='edit_question'),
 	path('accounts', views.accounts, name='accounts'),

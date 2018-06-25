@@ -46,3 +46,40 @@
 </div>
  
 {% endblock %}
+
+
+
+{% block content %}
+
+<div class="container mt-3">
+  <h2><strong>Evaluatees</strong></h2>
+  <p></p>  
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>ID.</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Score</th>
+        <th>Evaluate</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+    {% for evaluatee in request.user.employee.employee_set.filter %}
+       <tr>
+          <td>{{ evaluatee.pk }} </td>
+          <td>{{ evaluatee.user.get_full_name }}</td>
+          <td>{{ evaluatee.user.username }} </td>
+          <td>{{ evaluatee.data.score}} ({{evaluatee.data.grade}})</td>
+          <td><a class="btn btn-primary" href="{% url 'teleapp:evaluatees'%}?pk={{evaluatee.pk}}">
+            evaluate</a>
+          </td>
+       </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

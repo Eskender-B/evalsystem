@@ -7,6 +7,38 @@ from .models import Employee, Question
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
+# Helper function
+# Needs Criteria result to be set first
+
+def calculate(e):
+	sum_weight = 0
+	summ = 0
+
+	# Calculate score
+	for q in Question.objects.all():
+		summ += (float(e.data[str(q.pk)]) * float(q.weight))
+		sum_weight += float(q.weight)
+
+	if sum_weight == 0:
+		score = 0
+	else: 
+		score = (summ/sum_weight)
+
+	if score > 100:
+		grade = "Outstanding"
+	elif score > 95:
+		grade = "Excellent"
+	elif score > 80:
+		grade = "Very good"
+	elif score > 60:
+		grade = "Good"
+	else:
+		grade = "Poor"
+
+	return (score, grade)
+
+
+
 # Create your views here.
 
 def my_login(request):
@@ -58,40 +90,60 @@ def template(request):
 @login_required
 def result(request):
 
-	sum_weight = 0
-	summ = 0
-	# Calculate score
-	for q in Question.objects.all():
-		summ += (float(request.user.employee.data[str(q.pk)]) * float(q.weight))
-		sum_weight += float(q.weight)
-
-	if sum_weight == 0:
-		score = 0
-	else: 
-		score = (summ/sum_weight)
-
-	if score > 100:
-		grade = "Outstanding"
-	elif score > 95:
-		grade = "Excellent"
-	elif score > 80:
-		grade = "Very good"
-	elif score > 60:
-		grade = "Good"
-	else:
-		grade = "Poor"
+	score, grade = calculate(request.user.employee)
+	
 	return render(request, 'teleapp/result.html',{'question_list':Question.objects.all(),
 									'score': score, 'grade': grade})
 
 
 @login_required
 def evaluatees(request):
+
+	# FIX ME
+	# Try block for missing get param
+	try:
+		val=request.GET['pk']
+	except(KeyError):
+		val = None
+	
+	if not val==None: 
+
+		# Try block for missing data	
+		try:
+			evaluatee = Employee.objects.get(pk=val)
+			return render(request, 'teleapp/evaluate.html',
+					{'evaluatee': evaluatee, 'question_list':Question.objects.all()})
+
+		except (KeyError, Employee.DoesNotExist):
+			pass
+
 	return render(request, 'teleapp/evaluatees.html')
+
 
 
 @login_required
 def evaluate(request):
-	return render(request, 'teleapp/evaluate.html')
+	if request.method == 'POST':
+		try:
+			e = Employee.objects.get(pk=request.POST['pk'])
+
+			for q in Question.objects.all():
+				e.data[str(q.pk)] = request.POST[str(q.pk)]
+
+			# Needed by calculate
+			e.save()
+
+			score, grade = calculate(e)
+			e.data['score'] = score
+			e.data['grade'] = grade
+			e.save()
+
+		except (KeyError, Employee.DoesNotExist):
+			return render(request, 'teleapp/evaluate.html', 
+				{'error_message': "Employee does not exist!"}) 
+
+
+	return HttpResponseRedirect(reverse('teleapp:evaluatees'))
 
 
 @login_required
@@ -113,9 +165,10 @@ def edit(request):
 			# Add Result field for each employee
 			for emp in Employee.objects.all():
 				emp.data[str(q.pk)]='0'
+				emp.data['score'] = '0'
+				emp.data['grade'] = 'Poor'
 				emp.save()
 			
-	
 		return HttpResponseRedirect(reverse('teleapp:edit'))
 
 	else:
@@ -136,6 +189,8 @@ def edit(request):
 					# Remove corresponding key from all employees 
 					for emp in Employee.objects.all():
 						del emp.data[str(question.pk)]
+						emp.data['score'] = '0'
+						emp.data['grade'] = 'Poor'
 						emp.save()
 
 					question.delete()
@@ -166,6 +221,8 @@ def edit_question(request):
 			# Reset all corresponding key from all employees to zero 
 			for emp in Employee.objects.all():
 				emp.data[str(q.pk)] = '0'
+				emp.data['score'] = '0'
+				emp.data['grade'] = 'Poor'
 				emp.save()
 
 		except (KeyError, Question.DoesNotExist):
@@ -220,6 +277,9 @@ def accounts(request):
 				for q in Question.objects.all():
 					e.data[str(q.pk)] = '0'
 
+				e.data['score'] = '0'
+				e.data['grade'] = 'Poor'
+
 				e.save()
 
 			# Fix me: Insert proper Exception type
@@ -252,6 +312,8 @@ def accounts(request):
 					for evaluatee in employee.employee_set.filter():
 						for q in Question.objects.all():
 							evaluatee.data[str(q.pk)] = '0'
+							evaluatee.data['score'] = '0'
+							evaluatee.data['grade'] = 'Poor'
 						evaluatee.save()
 
 					employee.user.delete()
