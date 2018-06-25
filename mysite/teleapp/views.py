@@ -150,16 +150,17 @@ def accounts(request):
 		else:
 
 			try:
-				uname = request.POST['firstname'].lower() + request.POST['lastname'].lower()
 		
+				u = None
 				u = User.objects.create(
-							username=uname,
+							username=request.POST['username'],
 							first_name=request.POST['firstname'],
 							last_name=request.POST['lastname'])
 
 				
 				u.set_password(request.POST['pwd'])
-				
+				u.save()
+
 				evltr = Employee.objects.get(pk=request.POST['evaluator'])
 				stat = request.POST['status']
 
@@ -176,7 +177,8 @@ def accounts(request):
 
 			# Fix me: Insert proper Exception type
 			except:
-				u.delete()
+				if not u == None:
+					u.delete()
 				return render(request, 'teleapp/accounts.html',{'employee_list':Employee.objects.all(),
 					'status':Employee.STATUS[1:], 'error_message':"User Already exists or Evaluator does not exist!"})			
 	
@@ -203,7 +205,9 @@ def accounts(request):
 			
 				elif request.GET['action']=='edit':
 					return render(request, 'teleapp/edit_accounts.html',
-						{'employee': employee})
+						{'employee': employee,
+						 'status':Employee.STATUS[1:],
+						 'employee_list': Employee.objects.all()})
 
 			except (KeyError, Employee.DoesNotExist):
 				pass
@@ -222,8 +226,11 @@ def edit_accounts(request):
 			e = Employee.objects.get(pk=request.POST['pk'])
 			u = e.user
 			u.first_name = request.POST['firstname']
-			u.username = request.POST['firstname']
 			u.last_name = request.POST['lastname']
+		
+			if not request.POST['pwd'] == "":
+				u.set_password(request.POST['pwd'])
+
 			u.save()
 
 			e.status = request.POST['status']

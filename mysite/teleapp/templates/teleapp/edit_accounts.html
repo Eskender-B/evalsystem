@@ -1,5 +1,4 @@
 {% extends "teleapp/base.html" %}
-{%block title %} Edit Question {% endblock %}
 {% block sidebar %}
 
 <h3 class="text-center" >Evaluation</h3>
@@ -48,24 +47,51 @@
 
 {% block content%}
 <div class="mt-5 mb-5">  
-<p><strong> Edit criteria: </strong></p>
-<form class="form-inline form-control" method='post' action="{% url 'teleapp:edit_question' %}">
+<p><strong> Edit employee for: {{employee.user.username}}</strong></p>
+<form class="form-control" method='post' action="{% url 'teleapp:edit_accounts' %}">
    {% csrf_token %}
-    <input type="number" name="pk" value="{{question.pk}}" hidden readonly>
-    <label class="mr-sm-2" for="comment"> Criteria: </label>
-    <textarea cols="70" class="form-control align-items-stretch mr-sm-2" rows="1" id="comment" name="question" required >{{ question.question_text }} </textarea>
-    
-    <label class="mr-sm-2" for="comment"> Weight: </label>
-    <input class="mr-sm-2" type="number" name="weight" min="1" max="100"
-	value={{question.weight}} required>
+  <input type="number" name="pk" value="{{employee.pk}}" hidden readonly>
+  <div class="form-group">
+    <label for="firstname">First name:</label>
+    <input type="text" class="form-control" id="firstname" name="firstname" value="{{employee.user.first_name}}"required>
+  </div>
 
-    <button type="submit" class="btn btn-primary mr-sm-2">Submit</button>
+  <div class="form-group">
+    <label for="lastname">Last name:</label>
+    <input type="text" class="form-control" id="lastname" name="lastname" value="{{employee.user.last_name}}" required>
+  </div>
+
+  <div class="form-group">
+    <label for="status">Status:</label>
+    <select class="form-control" id="status" name="status" required>
+       {% for s in status %}
+          <option  {% if employee.status == s.0 %} selected="selected" {%endif%} value="{{s.0}}"> {{s.1}}</option>
+       {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="pwd">Change password:</label>
+    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Change password" value="" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="evaluator">Evaluator:</label>
+    <select class="form-control" id="evaluator" name="evaluator" required>
+       {% for e in employee_list %}
+          <option value="{{e.pk}}" {% if employee.evaluator.pk == e.pk %} selected="selected" {%endif%}> {{e.pk}}. {{e.user.first_name}} {{e.user.last_name}} ({{e.get_status_display }})</option>
+       {% endfor %}
+    </select>
+  </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% if error_message %}
   <p class="text-danger mt-3 bg-light card-body"> {{ error_message }} </p>
 {% endif %}
 
 </div>
+
 
 
 {% endblock %}

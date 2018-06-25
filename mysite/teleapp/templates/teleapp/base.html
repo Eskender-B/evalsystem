@@ -3,10 +3,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {% block title %} <title>Base</title> {% endblock %}
+  {% block title %} <title >EthioTel</title> {% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href=" {% static 'teleapp/bootstrap-4.1.1/css/bootstrap.min.css' %}">
+  <link rel="shortcut icon" href="{% static 'teleapp/images/et-logo-white-bg.gif' %}" />
   <script src="{% static 'teleapp/jquery-3.3.1.min.js' %}"></script>
   <script src="{% static 'teleapp/popper-1.14.0.min.js' %}"></script>
   <script src="{% static 'teleapp/bootstrap-4.1.1/js/bootstrap.min.js' %}"></script>
@@ -62,7 +63,7 @@
       <strong> Position: 
 
       {% if not request.user.is_anonymous %}
-        {{ request.user.employees.get_status_display }}
+        {{ request.user.employee.get_status_display }}
       {% else %}
         Login first 
       {% endif %}
