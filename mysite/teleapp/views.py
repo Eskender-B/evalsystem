@@ -93,19 +93,45 @@ def edit(request):
 			val=request.GET['pk']
 		except(KeyError):
 			val = None
+	
 		
+		if not val==None: 
 
-		# Try block for missing data	
-		try:
-			question = Questions.objects.get(pk=val)
-			question.delete()
+			# Try block for missing data	
+			try:
+				question = Questions.objects.get(pk=val)
+				if request.GET['action']=='delete':
+					question.delete()
+				elif request.GET['action']=='edit':
+					return render(request, 'teleapp/edit_question.html',
+						{'question': question})
 
-		except (KeyError, Questions.DoesNotExist):
-			pass
+			except (KeyError, Questions.DoesNotExist):
+				pass
 
 		question_list = Questions.objects.all()
 		return render(request, 'teleapp/edit.html',{'question_list': question_list})
 
+
+@login_required
+def edit_question(request):
+	if not request.user.is_superuser:
+		return HttpResponseRedirect(reverse('teleapp:home'))
+	
+	if request.method == 'POST':
+		try:
+			q = Questions.objects.get(pk=request.POST['pk'])
+			q.question_text = request.POST['question']
+			q.weight = request.POST['weight']
+			q.save()
+		except (KeyError, Questions.DoesNotExist):
+			return render(request, 'teleapp/edit_question', 
+				{'error_message': "Criteria(question) Does not exist!"}) 
+				
+
+	return HttpResponseRedirect(reverse('teleapp:edit'))
+
 @login_required
 def accounts(request):
 	return render(request, 'teleapp/accounts.html')
+	
