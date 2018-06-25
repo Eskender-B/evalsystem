@@ -57,7 +57,31 @@ def template(request):
 
 @login_required
 def result(request):
-	return render(request, 'teleapp/result.html')
+
+	sum_weight = 0
+	summ = 0
+	# Calculate score
+	for q in Question.objects.all():
+		summ += (float(request.user.employee.data[str(q.pk)]) * float(q.weight))
+		sum_weight += float(q.weight)
+
+	if sum_weight == 0:
+		score = 0
+	else: 
+		score = (summ/sum_weight)
+
+	if score > 100:
+		grade = "Outstanding"
+	elif score > 95:
+		grade = "Excellent"
+	elif score > 80:
+		grade = "Very good"
+	elif score > 60:
+		grade = "Good"
+	else:
+		grade = "Poor"
+	return render(request, 'teleapp/result.html',{'question_list':Question.objects.all(),
+									'score': score, 'grade': grade})
 
 
 @login_required
@@ -85,6 +109,12 @@ def edit(request):
 			q = Question.objects.create(question_text=request.POST['question'],
 					weight=request.POST['weight'])
 			q.save()
+
+			# Add Result field for each employee
+			for emp in Employee.objects.all():
+				emp.data[q.pk]='0'
+				emp.save()
+			
 	
 		return HttpResponseRedirect(reverse('teleapp:edit'))
 
@@ -104,6 +134,12 @@ def edit(request):
 				question = Question.objects.get(pk=val)
 				if request.GET['action']=='delete':
 					question.delete()
+
+					# Remove corresponding key from all employees 
+					for emp in Employee.objects.all():
+						del emp.data[question.pk]
+						emp.save()
+
 				elif request.GET['action']=='edit':
 					return render(request, 'teleapp/edit_question.html',
 						{'question': question})
@@ -126,6 +162,12 @@ def edit_question(request):
 			q.question_text = request.POST['question']
 			q.weight = request.POST['weight']
 			q.save()
+
+			# Reset all corresponding key from all employees to zero 
+			for emp in Employee.objects.all():
+				emp.data[question.pk] = '0'
+				emp.save()
+
 		except (KeyError, Question.DoesNotExist):
 			return render(request, 'teleapp/edit_question', 
 				{'error_message': "Criteria(question) Does not exist!"}) 

@@ -60,10 +60,9 @@
     </div> 
 
     <p class="text-white"> 
-      <strong> Position: 
-
+      <strong> 
       {% if not request.user.is_anonymous %}
-        {{ request.user.employee.get_status_display }}
+        {{request.user.get_full_name}} (@{{ request.user.username}} : {{request.user.employee.get_status_display }})
       {% else %}
         Login first 
       {% endif %}
