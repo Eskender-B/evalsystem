@@ -1,5 +1,5 @@
 # Evaluation System
-This project is a web based employee evaluation system done Ethio-Telecom Front Office department.
+This project is a web based employee evaluation system done for Ethio-Telecom Front Office department.
 
 
 ## How to setup
@@ -32,7 +32,7 @@ $ docker-compose run web /bin/bash -c 'cd mysite && python3 manage.py migrate'
 * Create the admin user to login
 
 ```
-$ docker-compose run web /bin/bash -c 'cd mysite && python3 shell'
+$ docker-compose run web /bin/bash -c 'cd mysite && python3 manage.py shell'
 >>> from django.contrib.auth.models import User
 >>> from teleapp.models import Employee
 >>> u = User.objects.create(username='username', first_name='firstname', last_name='lastname',is_superuser=1)
