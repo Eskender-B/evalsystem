@@ -89,11 +89,7 @@ def template(request):
 
 @login_required
 def result(request):
-
-	score, grade = calculate(request.user.employee)
-	
-	return render(request, 'teleapp/result.html',{'question_list':Question.objects.all(),
-									'score': score, 'grade': grade})
+	return render(request, 'teleapp/result.html',{'question_list':Question.objects.all()})
 
 
 @login_required
@@ -162,11 +158,18 @@ def edit(request):
 					weight=request.POST['weight'])
 			q.save()
 
+			# FIX ME
+			# Needed here bcs calculate queries Question
+			q_pk_str = str(q.pk)
+
 			# Add Result field for each employee
 			for emp in Employee.objects.all():
-				emp.data[str(q.pk)]='0'
-				emp.data['score'] = '0'
-				emp.data['grade'] = 'Poor'
+				emp.data[q_pk_str]='0'
+				emp.save()
+				# Update total score
+				score, grade = calculate(emp)
+				emp.data['score'] = score
+				emp.data['grade'] = grade
 				emp.save()
 			
 		return HttpResponseRedirect(reverse('teleapp:edit'))
@@ -185,15 +188,21 @@ def edit(request):
 			# Try block for missing data	
 			try:
 				question = Question.objects.get(pk=val)
+				q_pk_str = str(question.pk)
+
 				if request.GET['action']=='delete':
+					question.delete()
 					# Remove corresponding key from all employees 
 					for emp in Employee.objects.all():
-						del emp.data[str(question.pk)]
-						emp.data['score'] = '0'
-						emp.data['grade'] = 'Poor'
+						del emp.data[q_pk_str]
+						emp.save()
+						# Update total score
+						score, grade = calculate(emp)
+						emp.data['score'] = score
+						emp.data['grade'] = grade
 						emp.save()
 
-					question.delete()
+
 
 				elif request.GET['action']=='edit':
 					return render(request, 'teleapp/edit_question.html',
@@ -218,15 +227,20 @@ def edit_question(request):
 			q.weight = request.POST['weight']
 			q.save()
 
+			q_pk_str = str(q.pk)
 			# Reset all corresponding key from all employees to zero 
 			for emp in Employee.objects.all():
-				emp.data[str(q.pk)] = '0'
-				emp.data['score'] = '0'
-				emp.data['grade'] = 'Poor'
+				emp.data[q_pk_str] = '0'
+				emp.save()
+				# Update total score
+				score, grade = calculate(emp)
+				emp.data['score'] = score
+				emp.data['grade'] = grade
 				emp.save()
 
+
 		except (KeyError, Question.DoesNotExist):
-			return render(request, 'teleapp/edit_question', 
+			return render(request, 'teleapp/edit_question.html', 
 				{'error_message': "Criteria(question) Does not exist!"}) 
 				
 
@@ -277,9 +291,6 @@ def accounts(request):
 				for q in Question.objects.all():
 					e.data[str(q.pk)] = '0'
 
-				e.data['score'] = '0'
-				e.data['grade'] = 'Poor'
-
 				e.save()
 
 			# Fix me: Insert proper Exception type
@@ -312,8 +323,8 @@ def accounts(request):
 					for evaluatee in employee.employee_set.filter():
 						for q in Question.objects.all():
 							evaluatee.data[str(q.pk)] = '0'
-							evaluatee.data['score'] = '0'
-							evaluatee.data['grade'] = 'Poor'
+
+						evaluatee.data=Employee.DATA_DEFAULT
 						evaluatee.save()
 
 					employee.user.delete()

@@ -17,7 +17,7 @@ class Employee(models.Model):
 	# For programming convinience
 	STATUS_PR = {'A': 'Admin', 'M': 'Manager', 'S':'Supervisor', 'C':'Coach', 'J':'Junior Staff'}
 
-	DATA_DEFAULT = {'score':'0'}
+	DATA_DEFAULT = {'score':'0', 'grade':'Poor'}
 
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	status = models.CharField(max_length=1, choices=STATUS, default='N')
