@@ -77,3 +77,32 @@ class TestClass(TestCase):
 
 		response = self.client.get(reverse('teleapp:edit'))
 		self.assertEqual(response.status_code, 200)
+
+
+	def test_evaluate_page_with_method_GET(self):
+		# login first
+		emp = create_employee('fname', 'lname', 'password', 'M')
+		self.client.login(username='fnamelname', password='password')
+
+		response = self.client.get(reverse('teleapp:evaluate'))
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response.url, '/teleapp/evaluatees')
+
+	def test_edit_question_page_with_method_GET(self):
+		# login first
+		emp = create_employee('fname', 'lname', 'password', 'M', 1)
+		self.client.login(username='fnamelname', password='password')
+
+		response = self.client.get(reverse('teleapp:edit_question'))
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response.url, '/teleapp/edit')
+
+
+	def test_edit_accounts_page_with_method_GET(self):
+		# login first
+		emp = create_employee('fname', 'lname', 'password', 'M', 1)
+		self.client.login(username='fnamelname', password='password')
+
+		response = self.client.get(reverse('teleapp:edit_accounts'))
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response.url, '/teleapp/accounts')
